@@ -3,6 +3,9 @@ import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
+  // GitHub Pages serves the project at /<repo>/, so the hosted build needs a base path.
+  // Everything else — dev, Docker, nginx — stays at the root.
+  base: process.env.BASE_PATH ?? "/",
   plugins: [react(), tailwindcss()],
   server: {
     port: 5173,

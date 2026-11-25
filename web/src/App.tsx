@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { NavLink, Route, Routes } from "react-router-dom";
 import { api, type Health } from "./lib/api";
+import { DEMO, preload, recording } from "./lib/demo";
 import { Console } from "./pages/Console";
 import { Checkout } from "./pages/Checkout";
 import { Ledger } from "./pages/Ledger";
@@ -42,6 +43,43 @@ function Nav() {
   );
 }
 
+function DemoBanner() {
+  const [when, setWhen] = useState<string | null>(null);
+
+  useEffect(() => {
+    preload().then(() => {
+      const bundle = recording();
+      if (!bundle) return;
+      setWhen(new Date(bundle.recorded_at).toLocaleDateString("en-IN", {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+      }));
+    });
+  }, []);
+
+  return (
+    <div className="mx-auto mt-3 w-full max-w-5xl">
+      <div className="pill flex flex-wrap items-center justify-center gap-x-3 gap-y-1 border border-lime/25 bg-lime-deep px-4 py-2 text-center text-[12px] leading-relaxed">
+        <span className="font-semibold text-lime">Recorded demo</span>
+        <span className="text-mute">
+          Every verdict, hash and figure here is a real response from this engine
+          {when ? `, recorded on ${when}` : ""} — replayed, because a static host has no
+          API behind it. Only the cases on record can answer.
+        </span>
+        <a
+          className="font-semibold text-lime underline decoration-lime/40 hover:decoration-lime"
+          href="https://github.com/Arya-Patil686/anumati#run-it"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Run it live
+        </a>
+      </div>
+    </div>
+  );
+}
+
 function StatusBar({ health }: { health: Health | null }) {
   return (
     <div className="mono flex flex-wrap items-center justify-center gap-x-5 gap-y-1 text-[11px] text-faint">
@@ -51,7 +89,13 @@ function StatusBar({ health }: { health: Health | null }) {
             health ? "bg-conform" : "bg-violate"
           }`}
         />
-        {health ? "api connected" : "api unreachable — run `make dev`"}
+        {health
+          ? DEMO
+            ? "replaying a recorded session"
+            : "api connected"
+          : DEMO
+            ? "recording not loaded"
+            : "api unreachable — run `make dev`"}
       </span>
       {health && (
         <>
@@ -86,6 +130,7 @@ export function App() {
     <div className="min-h-screen bloom">
       <header className="px-4 pt-5 sm:px-6">
         <Nav />
+        {DEMO && <DemoBanner />}
       </header>
 
       <main className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 sm:py-10">

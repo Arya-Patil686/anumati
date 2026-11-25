@@ -5,6 +5,8 @@
  * message, so screens can show what actually went wrong instead of "something failed".
  */
 
+import { DEMO, demoPackUrl, demoRequest } from "./demo";
+
 const BASE = import.meta.env.VITE_API_BASE ?? "/api";
 
 export class ApiError extends Error {
@@ -18,6 +20,16 @@ export class ApiError extends Error {
 }
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
+  // The hosted build has no API behind it: it replays a recorded session instead.
+  if (DEMO) {
+    try {
+      return (await demoRequest(path, init)) as T;
+    } catch (exc) {
+      const status = (exc as { status?: number }).status ?? 0;
+      throw new ApiError(exc instanceof Error ? exc.message : String(exc), status);
+    }
+  }
+
   let response: Response;
   try {
     response = await fetch(`${BASE}${path}`, {
@@ -287,7 +299,8 @@ export const api = {
 
   metrics: () => request<MetricsResponse>("/metrics"),
 
-  pdfUrl: (disputeId: string) => `${BASE}/disputes/${disputeId}/pack.pdf`,
+  pdfUrl: (disputeId: string) =>
+    (DEMO ? demoPackUrl(disputeId) : null) ?? `${BASE}/disputes/${disputeId}/pack.pdf`,
 };
 
 // --- formatting -------------------------------------------------------------------

@@ -17,11 +17,43 @@ returns `CONFORMS` / `VIOLATES` / `AMBIGUOUS` with reasons per constraint, asks 
 only when the call is genuinely unclear, and writes every decision to a tamper-evident
 ledger that becomes a ready evidence pack if the purchase is disputed.
 
+**Try it: <https://arya-patil686.github.io/anumati/>**
+
 Full spec: [`docs/spec.pdf`](docs/spec.pdf). Working rules for contributors: [`CLAUDE.md`](CLAUDE.md).
 Shareable results page: <https://claude.ai/artifact/2GXXSA4Dshu7GyUNyUKkDD> (private — share from
 its own menu before sending it to anyone).
 
 ---
+
+## Run it
+
+### The hosted console
+
+<https://arya-patil686.github.io/anumati/> — all five screens, no install.
+
+GitHub Pages serves files, not Python, so the hosted console has **no API behind it**. It
+replays a recorded session instead: [`backend/tools/record_demo.py`](backend/tools/record_demo.py)
+drives the real app against a throwaway database and freshly generated keys and writes
+down every response, down to the hash chain and the evidence PDFs. So every verdict,
+signature and benchmark figure on that site is a real answer from this engine — just a
+recorded one, and the page says so. A request that was not recorded fails loudly rather
+than being answered, which is why the free-text box only knows the cases on record.
+
+Re-record after changing anything the engine answers with:
+
+```bash
+make demo-fixtures   # rewrites web/public/demo/
+```
+
+### The real thing, locally
+
+```bash
+docker compose up    # console :5173, API :8000
+make demo            # the whole story in your terminal, network off
+```
+
+That is the one to run if you want to type your own instruction: a live API parses it,
+checks a cart the agent really built, and appends to a ledger that really verifies.
 
 ## Status
 

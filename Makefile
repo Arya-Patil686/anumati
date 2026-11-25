@@ -1,4 +1,4 @@
-.PHONY: help install dev api web test lint fmt typecheck bench demo docker clean
+.PHONY: help install dev api web test lint fmt typecheck bench demo demo-fixtures docker clean
 
 PY      := .venv/bin/python
 PIP     := .venv/bin/pip
@@ -69,6 +69,9 @@ kappa: ## Fleiss' kappa over the filled annotation sheet
 
 demo: ## Run the section 9 demo end to end, offline
 	cd $(BACKEND) && LLM_MODE=replay ../$(PY) -m app.demo --fresh
+
+demo-fixtures: ## Re-record the hosted demo's responses from the real app
+	cd $(BACKEND) && LLM_MODE=replay PYTHONPATH=. ../$(PY) tools/record_demo.py
 
 docker: ## Build and run via docker compose
 	docker compose up --build
