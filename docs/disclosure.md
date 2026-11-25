@@ -26,13 +26,19 @@ Keep it current from day one — add a line in the same change that adds a modul
 | **Mandate Builder** | `backend/app/services/mandate_builder.py` | 25 Nov 2026 | Instruction → IntentMandate (14 constraint types, hard/soft, source spans), read-back, ES256 JWS signing |
 | Mandate API | `backend/app/api/routes_mandates.py` | 25 Nov 2026 | `POST /mandates`, `POST /mandates/{id}/sign`, `GET /mandates/{id}` |
 | LLM client + cache | `backend/app/services/llm/` | 25 Nov 2026 | Provider-agnostic JSON client, record/replay cache, injection guard |
+| **Conformance engine L1** | `backend/app/services/engine/l1_rules.py` | 25 Nov 2026 | Signature, expiry, use budget, merchant, budget incl. tax/shipping, quantity, delivery, recurrence |
+| **Conformance engine L2** | `backend/app/services/engine/l2_attributes.py` | 25 Nov 2026 | Category, colour/size/material, brand, dietary, pack size, substitution, near-match tables |
+| **Conformance engine L3** | `backend/app/services/engine/l3_judge.py` | 25 Nov 2026 | LLM judge for undecided constraints, injection guard, fail-safe to step-up |
+| **Aggregator and engine** | `backend/app/services/engine/aggregator.py` | 25 Nov 2026 | Threshold rule, AMBIGUOUS band, step-up question, layer orchestration |
+| Check API | `backend/app/api/routes_check.py` | 25 Nov 2026 | `POST /check` with cart and verdict ledger entries |
+| Golden cases | `backend/tests/golden_cases.yaml` | 25 Nov 2026 | 30 hand-labelled cases (10/10/10, 3 injection) |
+| M3 tests | `backend/tests/test_l1.py`, `test_aggregator.py`, `test_golden_cases.py` | 25 Nov 2026 | Layer rules, thresholds, judge fail-safe, golden-case suite |
 | M2 tests | `backend/tests/test_mandate_builder.py`, `test_catalogue.py`, `test_llm_client.py` | 25 Nov 2026 | 20-instruction parse set, catalogue/taxonomy, cache behaviour |
 
 ## Not yet built
 
-Conformance engine (L1–L3 and aggregator), shopping agent and fault modes, benchmark
-harness and baselines, dispute and evidence modules, web console. Stub files carry a
-`TODO(Mn)` marker.
+Shopping agent and fault modes, benchmark harness and baselines, dispute and evidence
+modules, web console. Stub files carry a `TODO(Mn)` marker.
 
 ## Third-party components
 

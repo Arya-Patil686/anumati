@@ -15,6 +15,7 @@ from sqlalchemy import Engine
 from sqlmodel import Session, SQLModel, create_engine
 
 from app import db
+from app.services.catalogue import CatalogueService, set_catalogue
 from app.services.ledger import LedgerService, LedgerSigner, set_signer
 from app.services.mandate_builder import MandateBuilder, MandateSigner, set_mandate_signer
 
@@ -71,3 +72,12 @@ def client(
 
     with TestClient(app) as c:
         yield c
+
+
+@pytest.fixture(autouse=True, scope="session")
+def _pin_catalogue() -> Iterator[None]:
+    """Every test runs against the deterministic synthetic catalogue, never a local
+    parquet build. Same SKUs on every machine, same golden-case results."""
+    set_catalogue(CatalogueService.synthetic())
+    yield
+    set_catalogue(None)

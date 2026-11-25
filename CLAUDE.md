@@ -41,7 +41,7 @@ Code + tests pass + README/docs updated + a one-line entry in `docs/disclosure.m
 ## Milestone status
 - [x] **M1** — Scaffold, data models, ledger with verify + tamper test
 - [x] **M2** — Catalogue, taxonomy, Mandate Builder, LLM client with record/replay
-- [ ] **M3** — Conformance engine L1–L3 + aggregator + golden cases
+- [x] **M3** — Conformance engine L1–L3 + aggregator + 30 golden cases
 - [ ] **M4** — Shopping agent and fault modes
 - [ ] **M5** — Benchmark and baselines
 - [ ] **M6** — Web app, disputes, demo

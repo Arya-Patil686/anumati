@@ -18,7 +18,6 @@ from __future__ import annotations
 import argparse
 import json
 import sys
-from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
@@ -26,6 +25,7 @@ import pandas as pd
 from pydantic import BaseModel, ConfigDict, Field
 
 from app.config import settings
+from app.models.cart import CartItem
 from app.models.common import Paise
 
 CATALOGUE_COLUMNS = [
@@ -270,13 +270,25 @@ class CatalogueService:
         return [p for _, p in scored[:limit]]
 
 
-@lru_cache
+_catalogue: CatalogueService | None = None
+
+
 def get_catalogue() -> CatalogueService:
     """Parquet if it has been built, synthetic otherwise, so nothing blocks on ingest."""
-    path = settings.catalogue_parquet_path
-    if path.exists():
-        return CatalogueService.from_parquet(path)
-    return CatalogueService.synthetic()
+    global _catalogue
+    if _catalogue is None:
+        path = settings.catalogue_parquet_path
+        _catalogue = (
+            CatalogueService.from_parquet(path) if path.exists() else CatalogueService.synthetic()
+        )
+    return _catalogue
+
+
+def set_catalogue(catalogue: CatalogueService | None) -> None:
+    """Override the loaded catalogue. Tests pin this to the synthetic one so they never
+    depend on whether someone has run `make catalogue` locally."""
+    global _catalogue
+    _catalogue = catalogue
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -294,3 +306,20 @@ def main(argv: list[str] | None = None) -> int:
 
 if __name__ == "__main__":
     sys.exit(main())
+
+
+def cart_item_from_product(product: Product, qty: int = 1) -> CartItem:
+    """Catalogue entry -> cart line. The agent never invents product fields."""
+    from app.models.cart import CartItem
+
+    return CartItem(
+        sku=product.sku,
+        title=product.title,
+        description=product.description,
+        category_path=product.category_path,
+        brand=product.brand,
+        attributes=dict(product.attributes),
+        unit_price_paise=product.price_paise,
+        qty=qty,
+        is_subscription=product.is_subscription,
+    )
