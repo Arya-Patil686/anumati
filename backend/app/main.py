@@ -12,7 +12,14 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api import routes_agent, routes_check, routes_ledger, routes_mandates
+from app.api import (
+    routes_agent,
+    routes_check,
+    routes_disputes,
+    routes_ledger,
+    routes_mandates,
+    routes_metrics,
+)
 from app.config import ENGINE_VERSION, settings
 from app.db import create_db_and_tables
 from app.services.ledger import get_signer
@@ -44,6 +51,8 @@ app.include_router(routes_mandates.router)
 app.include_router(routes_check.router)
 app.include_router(routes_agent.router)
 app.include_router(routes_ledger.router)
+app.include_router(routes_disputes.router)
+app.include_router(routes_metrics.router)
 
 
 @app.get("/health", tags=["meta"])

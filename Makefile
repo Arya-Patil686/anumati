@@ -60,8 +60,8 @@ bench: ## Generate MCB-IN, run every system, write bench/reports/
 kappa: ## Fleiss' kappa over the filled annotation sheet
 	$(BENCH_ENV) $(PY) -m bench.annotate.agreement
 
-demo: ## Seed data and run the section 9 demo in replay mode [M6]
-	@echo "make demo lands in M6"; exit 1
+demo: ## Run the section 9 demo end to end, offline
+	cd $(BACKEND) && LLM_MODE=replay ../$(PY) -m app.demo --fresh
 
 docker: ## Build and run via docker compose
 	docker compose up --build

@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import random
 from collections.abc import Callable
+from datetime import date
 from dataclasses import dataclass, field
 from enum import StrEnum
 from typing import Any
@@ -24,7 +25,7 @@ from typing import Any
 from pydantic import BaseModel, Field
 
 from app.models.cart import Cart
-from app.models.common import ConstraintType, Decision
+from app.models.common import ConstraintType, Decision, utc_now
 from app.models.mandate import IntentMandate
 from app.models.verdict import StepUp, Verdict
 from app.services.agent.faults import (
@@ -89,6 +90,7 @@ class _Plan:
     merchant: str | None = None
     wants_subscription: bool = False
     wants_veg: bool = False
+    max_delivery_days: int | None = None
 
 
 def _plan_from(mandate: IntentMandate) -> _Plan:
@@ -113,11 +115,22 @@ def _plan_from(mandate: IntentMandate) -> _Plan:
                 plan.wants_subscription = str(c.value) == "recurring"
             case ConstraintType.DIETARY:
                 plan.wants_veg = str(c.value) == "veg"
+            case ConstraintType.DELIVERY_BY:
+                # A competent agent checks the ETA before it adds to cart, instead of
+                # letting the conformance engine catch an avoidable miss.
+                deadline = date.fromisoformat(str(c.value))
+                plan.max_delivery_days = max(0, (deadline - utc_now().date()).days)
             case _:
                 continue
 
     if plan.category_path:
-        plan.query = plan.category_path.split(">")[-1].strip()
+        # Search with the adjectives, not just the category. Querying the bare category
+        # returns whatever is cheapest and the right item never enters the candidate
+        # list at all.
+        parts = [plan.category_path.split(">")[-1].strip()]
+        parts += [str(v) for v in plan.wanted_attributes.values()]
+        parts += sorted(plan.wanted_brands)
+        plan.query = " ".join(parts)
     return plan
 
 
@@ -139,6 +152,8 @@ def _score(product: Product, plan: _Plan) -> int:
         score += 2
     if plan.max_price_paise and product.price_paise <= plan.max_price_paise:
         score += 1
+    if plan.max_delivery_days is not None and product.delivery_days <= plan.max_delivery_days:
+        score += 4
     return score
 
 
@@ -165,10 +180,10 @@ class ShoppingAgent:
             plan.query,
             category_path=plan.category_path,
             max_price_paise=plan.max_price_paise,
-            limit=25,
+            limit=60,
         )
         if not candidates:
-            candidates = tools.search_catalogue(plan.query, limit=25)
+            candidates = tools.search_catalogue(plan.query, limit=60)
         if not candidates:
             return None, []
 

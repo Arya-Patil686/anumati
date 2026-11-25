@@ -26,11 +26,13 @@ app/models/store.py
 app/models/verdict.py
 app/services/__init__.py
 app/services/catalogue.py
+app/services/catalogue_synth.py
 app/services/disputes.py
 app/services/evidence_pdf.py
 app/services/ledger.py
 app/services/mandate_builder.py
 app/services/agent/__init__.py
+app/services/agent/__main__.py
 app/services/agent/faults.py
 app/services/agent/shopping_agent.py
 app/services/agent/tools.py
@@ -43,8 +45,12 @@ app/services/engine/taxonomy.py
 app/services/llm/__init__.py
 app/services/llm/cache.py
 app/services/llm/client.py
+tests/test_agent.py
 tests/test_aggregator.py
+tests/test_catalogue.py
+tests/test_golden_cases.py
 tests/test_l1.py
 tests/test_ledger.py
+tests/test_llm_client.py
 tests/test_mandate_builder.py
 tests/test_operators.py

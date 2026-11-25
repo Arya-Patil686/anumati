@@ -20,3 +20,4 @@ data/catalogue/*.parquet
 keys/
 *.pem
 data/bench/
+data/evidence/
