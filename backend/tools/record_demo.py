@@ -95,7 +95,9 @@ class Recorder:
         try:
             payload = response.json()
         except ValueError:  # pragma: no cover - every recorded route returns JSON
-            raise SystemExit(f"{method} {path} did not return JSON: {response.text[:200]}")
+            raise SystemExit(
+                f"{method} {path} did not return JSON: {response.text[:200]}"
+            ) from None
         self.entries.append(
             {
                 "method": method,
@@ -131,8 +133,9 @@ def _snapshot(db_path: Path, backup: Path) -> None:
 
 
 def _restore(db_path: Path, backup: Path) -> None:
-    from app import db
     from sqlalchemy import Engine
+
+    from app import db
 
     db.get_engine().dispose()
     shutil.copy2(backup, db_path)

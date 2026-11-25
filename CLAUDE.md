@@ -72,5 +72,7 @@ serves the API and the console together.
   a deployment: `make demo-fixtures` captures real responses into `web/public/demo/`, and
   CI only builds what is committed there. Change what the engine answers and that
   recording goes stale — re-record it in the same change, or the site starts lying.
+  Re-recording is not reproducible: ids and timestamps are fresh each run, so every
+  fixture and evidence PDF changes. Only re-record when the answers have, not to tidy.
 
 Do not add co-author or "generated with" attribution lines to commits or pull requests.
