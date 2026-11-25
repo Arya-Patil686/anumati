@@ -18,6 +18,8 @@ only when the call is genuinely unclear, and writes every decision to a tamper-e
 ledger that becomes a ready evidence pack if the purchase is disputed.
 
 Full spec: [`docs/spec.pdf`](docs/spec.pdf). Working rules for contributors: [`CLAUDE.md`](CLAUDE.md).
+Shareable results page: <https://claude.ai/artifact/2GXXSA4Dshu7GyUNyUKkDD> (private — share from
+its own menu before sending it to anyone).
 
 ---
 
