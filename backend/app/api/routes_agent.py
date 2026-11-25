@@ -17,6 +17,7 @@ from app.api.routes_check import run_check
 from app.db import get_session
 from app.models.cart import Cart
 from app.models.common import LedgerKind, StepUpAnswer, utc_now
+from app.models.mandate import IntentMandate
 from app.models.store import CartRow, MandateRow, StepUpRow, VerdictRow
 from app.models.verdict import StepUp
 from app.services.agent.faults import FaultMode
@@ -40,6 +41,7 @@ class AgentRunRequest(BaseModel):
 
 class AgentRunResponse(BaseModel):
     run: AgentRun
+    mandate: IntentMandate
     read_back: str
     mandate_ledger_seq: int | None = None
 
@@ -90,7 +92,10 @@ def agent_run(body: AgentRunRequest, session: SessionDep) -> AgentRunResponse:
         _record_payment(session, run.final.cart)
 
     return AgentRunResponse(
-        run=run, read_back=built.read_back, mandate_ledger_seq=mandate_entry.seq
+        run=run,
+        mandate=mandate,
+        read_back=built.read_back,
+        mandate_ledger_seq=mandate_entry.seq,
     )
 
 

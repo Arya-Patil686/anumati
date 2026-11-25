@@ -19,14 +19,16 @@ import argparse
 import json
 import sys
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
-import pandas as pd
 from pydantic import BaseModel, ConfigDict, Field
 
 from app.config import settings
 from app.models.cart import CartItem
 from app.models.common import Paise
+
+if TYPE_CHECKING:  # pandas is needed only to ingest, never to serve
+    import pandas as pd
 
 CATALOGUE_COLUMNS = [
     "sku",
@@ -148,6 +150,8 @@ def resolve_columns(columns: list[str]) -> dict[str, str]:
 
 def normalise_csv(csv_path: Path) -> pd.DataFrame:
     """Read a product CSV and return the normalised catalogue frame."""
+    import pandas as pd
+
     raw = pd.read_csv(csv_path)
     cols = resolve_columns(list(raw.columns))
     if "title" not in cols:
@@ -188,6 +192,8 @@ def write_parquet(frame: pd.DataFrame, path: Path) -> Path:
 
 def ingest(csv_path: Path | None = None, *, synthetic: bool = False) -> Path:
     """Build data/catalogue/catalogue.parquet from a CSV, or synthesise one."""
+    import pandas as pd
+
     from app.services.catalogue_synth import synthetic_catalogue
 
     out = settings.catalogue_parquet_path
@@ -220,6 +226,8 @@ class CatalogueService:
 
     @classmethod
     def from_parquet(cls, path: Path | None = None) -> CatalogueService:
+        import pandas as pd
+
         target = path or settings.catalogue_parquet_path
         frame = pd.read_parquet(target)
         return cls([Product.from_row(row) for row in frame.to_dict(orient="records")])
@@ -278,9 +286,21 @@ def get_catalogue() -> CatalogueService:
     global _catalogue
     if _catalogue is None:
         path = settings.catalogue_parquet_path
-        _catalogue = (
-            CatalogueService.from_parquet(path) if path.exists() else CatalogueService.synthetic()
-        )
+        if path.exists():
+            try:
+                _catalogue = CatalogueService.from_parquet(path)
+            except ImportError:
+                # No parquet reader in this image. Fall back loudly rather than
+                # failing every request — but say it, because a different catalogue
+                # than the operator built is a correctness hazard, not a detail.
+                print(
+                    f"WARNING: {path} exists but pandas/pyarrow are not installed; "
+                    f"serving the synthetic catalogue instead. "
+                    f"Install the 'catalogue' extra to read it."
+                )
+                _catalogue = CatalogueService.synthetic()
+        else:
+            _catalogue = CatalogueService.synthetic()
     return _catalogue
 
 

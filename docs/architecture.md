@@ -45,12 +45,12 @@ platform or the issuer.
 |---|---|---|---|
 | A | **Mandate Builder** | **Instruction → typed `IntentMandate`, read-back, ES256 JWS signing** | **M2 ✓** |
 | B | **Catalogue Service** | **Normalised catalogue, search, lookup, category taxonomy** | **M2 ✓** |
-| C | Shopping Agent | Tool-calling loop; fault modes inject realistic mistakes | M4 |
-| D | Conformance Engine | L1 rules → L2 attributes → L3 judge → aggregator | M3 |
+| C | **Shopping Agent** | **Tool-calling loop; fault modes inject realistic mistakes** | **M4 ✓** |
+| D | **Conformance Engine** | **L1 rules → L2 attributes → L3 judge → aggregator** | **M3 ✓** |
 | E | **Decision Ledger** | **Append-only, hash-chained, Ed25519-signed, verify endpoint** | **M1 ✓** |
-| F | Dispute & Evidence | Claim + ledger records → evidence pack, allocation, reason codes | M6 |
-| G | Web app | Ops console and phone-style step-up screen | M6 |
-| H | Benchmark & Eval | Generates MCB-IN, runs baselines and ANUMATI, writes reports | M5 |
+| F | **Dispute & Evidence** | **Claim + ledger records → evidence pack, allocation, reason codes** | **M6 ✓** |
+| G | **Web app** | **Ops console and phone-style step-up screen** | **M6 ✓** |
+| H | **Benchmark & Eval** | **Generates MCB-IN, runs baselines and ANUMATI, writes reports** | **M5 ✓** |
 
 ## The ledger (built)
 

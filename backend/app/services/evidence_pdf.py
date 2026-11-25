@@ -7,7 +7,7 @@ taking this document's word for it.
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 from reportlab.lib import colors
@@ -135,7 +135,7 @@ def render(pack: EvidencePack, path: Path) -> Path:
     """Write the pack to `path` and return it."""
     path.parent.mkdir(parents=True, exist_ok=True)
     styles = _styles()
-    generated = datetime.now(timezone.utc).strftime("%d %b %Y %H:%M UTC")
+    generated = datetime.now(UTC).strftime("%d %b %Y %H:%M UTC")
 
     document = SimpleDocTemplate(
         str(path), pagesize=A4,

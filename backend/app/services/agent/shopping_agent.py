@@ -17,8 +17,8 @@ from __future__ import annotations
 
 import random
 from collections.abc import Callable
-from datetime import date
 from dataclasses import dataclass, field
+from datetime import date
 from enum import StrEnum
 from typing import Any
 

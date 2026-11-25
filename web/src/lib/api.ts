@@ -168,6 +168,7 @@ export interface AgentRun {
 
 export interface AgentRunResponse {
   run: AgentRun;
+  mandate: IntentMandate;
   read_back: string;
   mandate_ledger_seq: number | null;
 }

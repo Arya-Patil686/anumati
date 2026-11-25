@@ -276,6 +276,7 @@ export function Checkout() {
 
               <VerdictCard
                 verdict={attempt.verdict}
+                mandate={result.mandate}
                 ledgerSeqs={attempt.ledger_seqs}
               />
             </Panel>

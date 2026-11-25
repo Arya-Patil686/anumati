@@ -39,7 +39,10 @@ class DisputeResponse(BaseModel):
 @router.post("", response_model=DisputeResponse, status_code=201)
 def open_dispute(body: DisputeRequest, session: SessionDep) -> DisputeResponse:
     pack = build_pack(session, body.cart_id, body.claim_text, body.claim_category)
-    if not pack.items:
+
+    # The pack always ends with a chain-verification line, so `items` is never empty.
+    # What matters is whether anything on the ledger actually refers to this cart.
+    if not any(item.ledger_seq is not None for item in pack.items):
         raise HTTPException(status_code=404, detail=f"nothing on record for {body.cart_id}")
 
     pdf_path = PACK_DIR / f"{pack.dispute.dispute_id}.pdf"

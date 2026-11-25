@@ -22,9 +22,16 @@ dev: api ## Run the API (the web console arrives in M6; use `make web` once it d
 api: ## Start the FastAPI app with reload (override with PORT=8099)
 	cd $(BACKEND) && ../$(PY) -m uvicorn app.main:app --reload --host $(HOST) --port $(PORT)
 
-web: ## Start the Vite dev server [M6]
-	@test -f web/package.json || { echo "web/ is scaffolded in M6"; exit 0; }
-	cd web && npm run dev
+web: ## Start the Vite dev server (proxies /api to the API)
+	cd web && npm install --silent && npm run dev
+
+up: ## API + console in Docker on :8000 and :5173
+	docker compose up --build -d
+	@echo "console  http://localhost:5173"
+	@echo "api      http://localhost:8000/docs"
+
+down: ## Stop the Docker stack
+	docker compose down
 
 catalogue: ## Build data/catalogue/catalogue.parquet (CSV from .env, else synthetic)
 	cd $(BACKEND) && ../$(PY) -m app.services.catalogue ingest

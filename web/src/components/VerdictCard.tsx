@@ -43,7 +43,8 @@ export function VerdictCard({
         <DecisionBadge decision={verdict.decision} size="lg" />
         <div className="mono text-right text-[11px] leading-relaxed text-faint">
           <div>
-            {verdict.latency_ms} ms · engine {verdict.engine_version}
+            {verdict.latency_ms < 1 ? "<1" : verdict.latency_ms} ms · engine{" "}
+            {verdict.engine_version}
           </div>
           <div>prompt {shortHash(verdict.prompt_hash, 8)}</div>
         </div>

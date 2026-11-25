@@ -45,11 +45,19 @@ Keep it current from day one — add a line in the same change that adds a modul
 | **Eval harness** | `bench/run_eval.py` | 25 Nov 2026 | All section 8 metrics, confusion matrices, calibration plot, reports |
 | Annotation | `bench/annotate/` | 25 Nov 2026 | Sampling sheet, Fleiss' kappa, majority gold |
 | M5 tests | `backend/tests/test_operators.py` | 25 Nov 2026 | Operators, splits, metrics, kappa, anti-circularity guard |
+| **Dispute module** | `backend/app/services/disputes.py` | 25 Nov 2026 | Ledger gathering, claim classification, evidence pack, allocation and reason codes |
+| Evidence PDF | `backend/app/services/evidence_pdf.py` | 25 Nov 2026 | reportlab pack with ledger seq and hash on every line |
+| Dispute + metrics API | `backend/app/api/routes_disputes.py`, `routes_metrics.py` | 25 Nov 2026 | `POST /disputes`, PDF download, `GET /metrics` |
+| Demo script | `backend/app/demo.py` | 25 Nov 2026 | The eight-beat section 9 demo, offline |
+| **Web console** | `web/` | 25 Nov 2026 | React + Vite + TS + Tailwind: overview, checkout, ledger, disputes, benchmark |
+| Container packaging | `web/Dockerfile`, `web/nginx.conf`, `docker-compose.yml` | 25 Nov 2026 | API plus console behind one origin |
+| M6 tests | `backend/tests/test_disputes.py` | 25 Nov 2026 | Classification, pack assembly, PDF, metrics endpoint |
 | M2 tests | `backend/tests/test_mandate_builder.py`, `test_catalogue.py`, `test_llm_client.py` | 25 Nov 2026 | 20-instruction parse set, catalogue/taxonomy, cache behaviour |
 
 ## Not yet built
 
-Dispute and evidence modules, web console. Stub files carry a `TODO(Mn)` marker.
+Nothing from the planned scope. Everything in spec sections 5–9 is implemented and listed
+above, so **all of it must be disclosed** if any part is reused in Chennai.
 
 ## Third-party components
 
@@ -58,6 +66,9 @@ Dispute and evidence modules, web console. Stub files carry a `TODO(Mn)` marker.
 | FastAPI, Pydantic, SQLModel, Uvicorn | MIT / BSD | API and models |
 | `cryptography` | Apache-2.0 / BSD | Ed25519 signing |
 | Product catalogue datasets (Kaggle) | per-dataset — **check before use** | Benchmark catalogue (M2) |
+| React, Vite, Tailwind, Recharts | MIT | Web console |
+| reportlab | BSD | Evidence pack PDF |
+| scikit-learn, pandas, matplotlib | BSD | Benchmark harness |
 | AP2 reference implementation | Apache-2.0 | Naming reference only; the SDK is not vendored |
 
 Nothing from AP2 is copied into this repository; `IntentMandate` / `CartMandate` naming

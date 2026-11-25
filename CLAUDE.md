@@ -12,7 +12,9 @@ sentence-transformers (intfloat/multilingual-e5-small), React+Vite+TS+Tailwind+s
 ## Commands
 ```
 make install    # venv + editable install + .env
-make dev        # api (the web console is wired in at M6, then `make web`)
+make dev        # api only
+make web        # the console (Vite dev server on :5173)
+make up         # api + console in Docker, one command
 make test       # pytest
 make lint       # ruff
 make catalogue  # build data/catalogue/catalogue.parquet
@@ -46,9 +48,10 @@ Code + tests pass + README/docs updated + a one-line entry in `docs/disclosure.m
 - [x] **M3** — Conformance engine L1–L3 + aggregator + 30 golden cases
 - [x] **M4** — Shopping agent, fault modes, step-up flow
 - [x] **M5** — MCB-IN benchmark, baselines B0–B3, eval harness
-- [ ] **M6** — Web app, disputes, demo
+- [x] **M6** — Web console, disputes, evidence packs, demo
 
-Modules not yet implemented exist as stub files with a `TODO(Mn)` marker. Do not delete them.
+All six milestones are in. `make demo` runs the whole story offline; `docker compose up`
+serves the API and the console together.
 
 ## Decisions worth not relitigating
 - **The Mandate Builder is rule-based, not LLM-based.** The read-back is what the user
@@ -59,6 +62,10 @@ Modules not yet implemented exist as stub files with a `TODO(Mn)` marker. Do not
   every machine, and the structured fields are constructed, so they are usable as labels.
 - **`DEMO-*` SKUs are hand-written and stable.** The section 9 demo and the M3 golden cases
   reference them by SKU. Do not renumber them.
+- **pandas is an ingest dependency, not a runtime one.** The API serves without it; only
+  reading a built `catalogue.parquet` needs the `catalogue` extra. Keep it lazily imported.
+- **`tailwindcss` and `@tailwindcss/vite` must be pinned to the same version.** A mismatch
+  makes the CSS build throw `Cannot convert undefined or null to object`.
 
 ## Git
 Do not add co-author or "generated with" attribution lines to commits or pull requests.

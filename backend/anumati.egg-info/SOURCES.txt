@@ -8,6 +8,7 @@ app/__init__.py
 app/canonical.py
 app/config.py
 app/db.py
+app/demo.py
 app/main.py
 app/api/__init__.py
 app/api/routes_agent.py
@@ -48,6 +49,7 @@ app/services/llm/client.py
 tests/test_agent.py
 tests/test_aggregator.py
 tests/test_catalogue.py
+tests/test_disputes.py
 tests/test_golden_cases.py
 tests/test_l1.py
 tests/test_ledger.py

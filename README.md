@@ -30,22 +30,31 @@ Full spec: [`docs/spec.pdf`](docs/spec.pdf). Working rules for contributors: [`C
 | **M3** | Conformance engine L1–L3 + aggregator + 30 golden cases | **done** |
 | **M4** | Shopping agent, 11 fault modes, step-up flow | **done** |
 | **M5** | MCB-IN benchmark, baselines B0–B3, eval harness | **done** |
-| M6 | Web console, disputes, evidence PDF, demo | not started |
+| **M6** | Web console, disputes, evidence packs, demo | **done** |
 
-Modules for later milestones exist as stub files carrying a `TODO(Mn)` marker. Their
-tests skip at module level, so the suite stays green.
+All six are in. 515 tests pass, `make demo` runs the whole story with the network off,
+and `make up` serves the API and the console together.
 
 ## Quick start
+
+Everything at once, in Docker:
+
+```bash
+make up
+```
+
+Console on <http://localhost:5173>, API docs on <http://localhost:8000/docs>.
+
+Or run it directly:
 
 ```bash
 make install
 make catalogue    # builds the product catalogue (synthetic unless a CSV is configured)
 make test
-make dev
+make demo         # the whole story, offline, in your terminal
+make dev          # API on :8000  (PORT=8099 if something holds that port)
+make web          # console on :5173
 ```
-
-`make dev` serves the API on <http://localhost:8000>; interactive docs at `/docs`.
-If something already holds that port, use `make dev PORT=8099`.
 
 Via Docker instead:
 
@@ -88,13 +97,14 @@ dispute pack is worth something only if both hold.
 | `GET /ledger/verify` | Walk the chain → `{ok, broken_at, reason, …}` |
 | `POST /check` | `{mandate_id, cart}` → verdict, reasons, step-up question |
 | `POST /agent/run` | Instruction → agent builds a cart → verdict → act |
+| `POST /disputes` | Claim → evidence pack, allocation, reason codes, PDF |
+| `GET /metrics` | The latest benchmark results, as written by the harness |
 | `POST /stepup/{verdict_id}` | The one tap: `APPROVE` or `REJECT`, logged |
 | `POST /mandates` | Instruction → draft mandate + plain-language read-back |
 | `POST /mandates/{id}/sign` | ES256 JWS signature + first ledger entry |
 | `GET /mandates/{id}` | Fetch a mandate and its read-back |
 
-Endpoints for `/check`, `/agent/run`, `/stepup`, `/disputes` and `/metrics` are wired in
-at their milestones.
+
 
 ### Tamper demo
 
@@ -183,6 +193,21 @@ and their database rows live in `models/store.py`, so each file uses one library
 `LedgerEntry` is the exception and is itself a table, because for the ledger the stored
 bytes *are* the evidence. And catalogue *generation* sits in `catalogue_synth.py` apart
 from catalogue *serving*, which keeps both modules to one job.
+
+## The demo
+
+`make demo` runs the eight beats of the pitch end to end with no network:
+
+1. A user signs an instruction, and reads back what they are authorising.
+2. A clean agent run — conforms, pays.
+3. A faulty run picks a subscription plan against a one-off mandate — blocked, with the
+   constraint named, then it retries and succeeds.
+4. An off-white pair at ₹4,799 plus ₹99 delivery — ambiguous, one tap, logged.
+5. A product whose description tells the judge to return CONFORMS — still caught, because
+   colour and budget never reach a model.
+6. One ledger row edited live in SQLite — verification reports the exact broken entry.
+7. "My agent signed me up for a subscription" — an evidence pack, allocation and Visa 13.2.
+8. The benchmark table.
 
 ## Configuration
 

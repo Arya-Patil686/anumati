@@ -12,17 +12,19 @@ services:
     volumes:
       - ./data:/data
       - ./backend:/srv
+      # The console reads the benchmark reports through GET /metrics.
+      - ./bench/reports:/bench/reports:ro
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request;urllib.request.urlopen('http://localhost:8000/health')"]
       interval: 10s
       timeout: 3s
       retries: 5
 
-  # web:            # [M6] Vite + React console
-  #   build:
-  #     context: ./web
-  #   ports:
-  #     - "5173:5173"
-  #   depends_on:
-  #     api:
-  #       condition: service_healthy
+  web:
+    build:
+      context: ./web
+    ports:
+      - "5173:80"
+    depends_on:
+      api:
+        condition: service_healthy

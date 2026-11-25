@@ -6,6 +6,9 @@ sqlmodel<0.1,>=0.0.22
 cryptography<47,>=43
 python-dotenv<2,>=1.0
 pyyaml<7,>=6
+joserfc<2,>=1.0
+reportlab<5,>=4.2
+httpx<1,>=0.27
 
 [bench]
 pandas<3,>=2.2
@@ -21,9 +24,4 @@ ruff<0.20,>=0.7
 mypy<2,>=1.13
 
 [engine]
-joserfc<2,>=1.0
 sentence-transformers<6,>=3.0
-httpx<1,>=0.27
-
-[pdf]
-reportlab<5,>=4.2
