@@ -32,6 +32,10 @@ catalogue: ## Build data/catalogue/catalogue.parquet (CSV from .env, else synthe
 catalogue-synth: ## Force the deterministic synthetic catalogue
 	cd $(BACKEND) && ../$(PY) -m app.services.catalogue ingest --synthetic
 
+agent: ## One agent run (INSTR="..." MODE=normal|faulty FAULT=recurrence_flip)
+	cd $(BACKEND) && ../$(PY) -m app.services.agent --instruction "$(INSTR)" \
+		--mode "$(or $(MODE),normal)" $(if $(FAULT),--fault "$(FAULT)",)
+
 test: ## Run pytest
 	cd $(BACKEND) && ../$(PY) -m pytest -q
 

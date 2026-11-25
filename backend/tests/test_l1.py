@@ -347,3 +347,15 @@ def test_substitution_is_violated_when_the_brand_was_swapped() -> None:
     result = l2_attributes.check_substitution(substitution, cart, mandate)
     assert result.status is ConstraintStatus.VIOLATED
     assert "gold harvest" in result.rationale.lower()
+
+
+def test_a_cart_survives_a_round_trip_through_json() -> None:
+    """Regression: computed fields are serialised but must not break re-validation.
+
+    A cart that cannot be read back out of the ledger is not evidence.
+    """
+    cart = make_cart([shoe(qty=2)], shipping_paise=9_900)
+    dumped = cart.model_dump(mode="json")
+
+    assert dumped["items"][0]["line_total_paise"] == 899_800
+    assert Cart.model_validate(dumped) == cart

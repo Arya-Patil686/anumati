@@ -525,6 +525,20 @@ class MandateBuilder:
                 )
             )
 
+        # Buy-once is the safe default for an unattended mandate. Without this, an agent
+        # that quietly picks a subscription plan breaches nothing, which is precisely the
+        # Visa 13.2 / Mastercard 4841 dispute. A recurring commitment has to be asked for.
+        if not any(c.type == ConstraintType.RECURRENCE for c in constraints):
+            constraints.append(
+                Constraint(
+                    type=ConstraintType.RECURRENCE,
+                    operator=Operator.EQ,
+                    value=Recurrence.ONE_OFF.value,
+                    hard=True,
+                    source_span=None,
+                )
+            )
+
         mandate = IntentMandate(
             user_id=user_id,
             natural_language=text,

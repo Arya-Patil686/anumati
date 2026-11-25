@@ -10,13 +10,27 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Any
 
-from pydantic import BaseModel, ConfigDict, Field, computed_field
+from pydantic import BaseModel, ConfigDict, Field, computed_field, model_validator
 
 from app.models.common import Paise, new_id, utc_now
+
+_COMPUTED_FIELDS = frozenset({"line_total_paise"})
 
 
 class CartItem(BaseModel):
     model_config = ConfigDict(extra="forbid")
+
+    @model_validator(mode="before")
+    @classmethod
+    def _drop_computed(cls, data: Any) -> Any:
+        """Computed fields are serialised but must not be fed back in.
+
+        Without this, a cart written to the ledger or the database cannot be read back:
+        `extra="forbid"` rejects the very keys `model_dump()` emitted.
+        """
+        if isinstance(data, dict):
+            return {k: v for k, v in data.items() if k not in _COMPUTED_FIELDS}
+        return data
 
     sku: str
     title: str

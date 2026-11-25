@@ -33,12 +33,16 @@ Keep it current from day one — add a line in the same change that adds a modul
 | Check API | `backend/app/api/routes_check.py` | 25 Nov 2026 | `POST /check` with cart and verdict ledger entries |
 | Golden cases | `backend/tests/golden_cases.yaml` | 25 Nov 2026 | 30 hand-labelled cases (10/10/10, 3 injection) |
 | M3 tests | `backend/tests/test_l1.py`, `test_aggregator.py`, `test_golden_cases.py` | 25 Nov 2026 | Layer rules, thresholds, judge fail-safe, golden-case suite |
+| **Shopping agent** | `backend/app/services/agent/shopping_agent.py` | 25 Nov 2026 | Tool-calling loop, plan from mandate, act on verdict, retry once |
+| Agent tools | `backend/app/services/agent/tools.py` | 25 Nov 2026 | search_catalogue, get_product, add_to_cart, checkout, tool log |
+| Fault modes | `backend/app/services/agent/faults.py` | 25 Nov 2026 | 11 operators mirroring the benchmark perturbations |
+| Agent API + CLI | `backend/app/api/routes_agent.py`, `app/services/agent/__main__.py` | 25 Nov 2026 | `POST /agent/run`, `POST /stepup/{id}`, `make agent` |
+| M4 tests | `backend/tests/test_agent.py` | 25 Nov 2026 | Tools, planning, every fault mode, step-up flow |
 | M2 tests | `backend/tests/test_mandate_builder.py`, `test_catalogue.py`, `test_llm_client.py` | 25 Nov 2026 | 20-instruction parse set, catalogue/taxonomy, cache behaviour |
 
 ## Not yet built
 
-Shopping agent and fault modes, benchmark harness and baselines, dispute and evidence
-modules, web console. Stub files carry a `TODO(Mn)` marker.
+Benchmark harness and baselines, dispute and evidence modules, web console. Stub files carry a `TODO(Mn)` marker.
 
 ## Third-party components
 

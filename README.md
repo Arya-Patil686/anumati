@@ -28,7 +28,7 @@ Full spec: [`docs/spec.pdf`](docs/spec.pdf). Working rules for contributors: [`C
 | **M1** | Scaffold, data models, ledger with verify + tamper test | **done** |
 | **M2** | Catalogue, taxonomy, Mandate Builder, LLM record/replay | **done** |
 | **M3** | Conformance engine L1–L3 + aggregator + 30 golden cases | **done** |
-| M4 | Shopping agent and fault modes | not started |
+| **M4** | Shopping agent, 11 fault modes, step-up flow | **done** |
 | M5 | Benchmark (MCB-IN) and baselines | not started |
 | M6 | Web console, disputes, evidence PDF, demo | not started |
 
@@ -87,6 +87,8 @@ dispute pack is worth something only if both hold.
 | `GET /ledger/{seq}` | One entry |
 | `GET /ledger/verify` | Walk the chain → `{ok, broken_at, reason, …}` |
 | `POST /check` | `{mandate_id, cart}` → verdict, reasons, step-up question |
+| `POST /agent/run` | Instruction → agent builds a cart → verdict → act |
+| `POST /stepup/{verdict_id}` | The one tap: `APPROVE` or `REJECT`, logged |
 | `POST /mandates` | Instruction → draft mandate + plain-language read-back |
 | `POST /mandates/{id}/sign` | ES256 JWS signature + first ledger entry |
 | `GET /mandates/{id}` | Fetch a mandate and its read-back |

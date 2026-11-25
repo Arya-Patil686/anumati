@@ -16,6 +16,7 @@ make dev        # api (the web console is wired in at M6, then `make web`)
 make test       # pytest
 make lint       # ruff
 make catalogue  # build data/catalogue/catalogue.parquet
+make agent      # one agent run: INSTR="..." MODE=faulty FAULT=recurrence_flip
 make bench    # generate benchmark + run all systems + write bench/reports/   [M5]
 make demo     # seed data + run demo in LLM_MODE=replay                       [M6]
 ```
@@ -42,7 +43,7 @@ Code + tests pass + README/docs updated + a one-line entry in `docs/disclosure.m
 - [x] **M1** — Scaffold, data models, ledger with verify + tamper test
 - [x] **M2** — Catalogue, taxonomy, Mandate Builder, LLM client with record/replay
 - [x] **M3** — Conformance engine L1–L3 + aggregator + 30 golden cases
-- [ ] **M4** — Shopping agent and fault modes
+- [x] **M4** — Shopping agent, fault modes, step-up flow
 - [ ] **M5** — Benchmark and baselines
 - [ ] **M6** — Web app, disputes, demo
 
