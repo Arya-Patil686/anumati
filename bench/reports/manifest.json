@@ -1,0 +1,50 @@
+{
+  "generated_at": "2026-11-25T11:02:49+00:00",
+  "engine_version": "0.1.0",
+  "llm_mode": "replay",
+  "dataset": {
+    "cases": 1902,
+    "instructions": 505,
+    "gold": {
+      "CONFORMS": 446,
+      "VIOLATES": 1377,
+      "AMBIGUOUS": 79
+    },
+    "operators": 16,
+    "categories": 30,
+    "languages": [
+      "en",
+      "hi-Latn"
+    ],
+    "hinglish_share": 0.325,
+    "injection_cases": 5
+  },
+  "split": {
+    "dev_cases": 1255,
+    "test_cases": 647,
+    "held_out_operators": [
+      "dietary_violation",
+      "near_colour",
+      "near_pack_size",
+      "recurrence_flip"
+    ],
+    "held_out_categories": [
+      "Apparel > Men > Track Pants",
+      "Apparel > Women > Kurtas",
+      "Fitness > Accessories > Yoga Mats",
+      "Footwear > Sports > Walking",
+      "Grocery > Dairy > Paneer",
+      "Grocery > Edible Oils > Mustard Oil",
+      "Grocery > Edible Oils > Sunflower Oil",
+      "Grocery > Staples > Sugar & Salt",
+      "Personal Care > Skin Care > Moisturiser"
+    ]
+  },
+  "notes": [
+    "**B3 LLM one-prompt was not run.** No model was reachable (no recorded response for prompt 'b3_one_prompt' (8994ad1b62c6). Re-run with LLM_MODE=record while you have network.). Its row is omitted rather than filled with invented numbers. Re-run with `LLM_MODE=record` and a provider configured to include it.",
+    "B2 encoder: `tfidf-char-3-5`.",
+    "ANUMATI called its LLM judge for 124/7428 constraints (1.7%); in replay mode with nothing recorded those calls fail safe to a step-up.",
+    "Latency is measured in-process on one machine and excludes network time to a hosted model. It is a relative comparison, not a production figure."
+  ],
+  "catalogue_skus": 2002
+}

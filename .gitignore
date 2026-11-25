@@ -15,9 +15,8 @@ dist/
 # Data: raw downloads and generated artefacts are not committed
 data/raw/
 data/catalogue/*.parquet
-bench/reports/*
-!bench/reports/.gitkeep
 
 # Keys: never commit private keys
 keys/
 *.pem
+data/bench/

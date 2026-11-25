@@ -70,6 +70,7 @@ _UNIT_TO_BASE: dict[str, tuple[str, float]] = {
 CONFIDENCE_EXACT = 0.99
 CONFIDENCE_CLEAR_MISS = 0.95
 CONFIDENCE_NEAR = 0.55  # deliberately below T_CONFORM, so a near match never passes alone
+CONFIDENCE_SIBLING_MISS = 0.85  # a precise term got a neighbouring category
 
 
 @dataclass(frozen=True)
@@ -173,12 +174,18 @@ def check_category(
             ),
         )
 
+    # The user named their category precisely and got a sibling of it — training shoes
+    # for "running shoes". That is a breach, not a matter of taste. Confidence sits
+    # below a cross-branch miss because sibling categories genuinely do overlap.
     return _result(
         constraint,
-        ConstraintStatus.UNCLEAR,
-        confidence=CONFIDENCE_NEAR,
+        ConstraintStatus.VIOLATED,
+        confidence=CONFIDENCE_SIBLING_MISS,
         evidence=["category_path"],
-        rationale=f"cart holds {paths[0]!r}, which is related to but not {wanted!r}",
+        rationale=(
+            f"cart holds {paths[0]!r} but {constraint.source_span or wanted!r} names "
+            f"{wanted!r}"
+        ),
     )
 
 

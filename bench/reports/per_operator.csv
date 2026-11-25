@@ -1,0 +1,61 @@
+system,operator,n,accuracy
+B0 numeric,attribute_swap,8,0.375
+B0 numeric,delivery_late,5,1.0
+B0 numeric,dietary_violation,20,0.6
+B0 numeric,hidden_fees,69,1.0
+B0 numeric,merchant_off_list,10,1.0
+B0 numeric,near_colour,18,0.0
+B0 numeric,near_pack_size,5,0.0
+B0 numeric,none,94,0.9574
+B0 numeric,price_over,28,1.0
+B0 numeric,quantity_off,1,1.0
+B0 numeric,recurrence_flip,255,0.2784
+B0 numeric,substitution_unapproved,7,0.5714
+B0 numeric,vague_category_term,18,0.0
+B0 numeric,wrong_category_far,55,1.0
+B0 numeric,wrong_category_near,54,0.3889
+B1 keyword,attribute_swap,8,0.75
+B1 keyword,delivery_late,5,1.0
+B1 keyword,dietary_violation,20,1.0
+B1 keyword,hidden_fees,69,1.0
+B1 keyword,merchant_off_list,10,1.0
+B1 keyword,near_colour,18,0.0
+B1 keyword,near_pack_size,5,0.0
+B1 keyword,none,94,0.7128
+B1 keyword,price_over,28,1.0
+B1 keyword,quantity_off,1,1.0
+B1 keyword,recurrence_flip,255,0.8667
+B1 keyword,substitution_unapproved,7,0.7143
+B1 keyword,vague_category_term,18,0.0
+B1 keyword,wrong_category_far,55,1.0
+B1 keyword,wrong_category_near,54,0.9074
+B2 embedding,attribute_swap,8,1.0
+B2 embedding,delivery_late,5,1.0
+B2 embedding,dietary_violation,20,1.0
+B2 embedding,hidden_fees,69,1.0
+B2 embedding,merchant_off_list,10,1.0
+B2 embedding,near_colour,18,0.0
+B2 embedding,near_pack_size,5,0.0
+B2 embedding,none,94,0.266
+B2 embedding,price_over,28,1.0
+B2 embedding,quantity_off,1,1.0
+B2 embedding,recurrence_flip,255,0.9804
+B2 embedding,substitution_unapproved,7,0.8571
+B2 embedding,vague_category_term,18,0.0
+B2 embedding,wrong_category_far,55,1.0
+B2 embedding,wrong_category_near,54,0.9444
+ANUMATI,attribute_swap,8,1.0
+ANUMATI,delivery_late,5,1.0
+ANUMATI,dietary_violation,20,1.0
+ANUMATI,hidden_fees,69,1.0
+ANUMATI,merchant_off_list,10,1.0
+ANUMATI,near_colour,18,1.0
+ANUMATI,near_pack_size,5,1.0
+ANUMATI,none,94,0.9574
+ANUMATI,price_over,28,1.0
+ANUMATI,quantity_off,1,1.0
+ANUMATI,recurrence_flip,255,1.0
+ANUMATI,substitution_unapproved,7,1.0
+ANUMATI,vague_category_term,18,1.0
+ANUMATI,wrong_category_far,55,1.0
+ANUMATI,wrong_category_near,54,0.9444

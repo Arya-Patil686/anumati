@@ -38,11 +38,18 @@ Keep it current from day one — add a line in the same change that adds a modul
 | Fault modes | `backend/app/services/agent/faults.py` | 25 Nov 2026 | 11 operators mirroring the benchmark perturbations |
 | Agent API + CLI | `backend/app/api/routes_agent.py`, `app/services/agent/__main__.py` | 25 Nov 2026 | `POST /agent/run`, `POST /stepup/{id}`, `make agent` |
 | M4 tests | `backend/tests/test_agent.py` | 25 Nov 2026 | Tools, planning, every fault mode, step-up flow |
+| **Benchmark generator** | `bench/generate.py` | 25 Nov 2026 | MCB-IN instruction and cart generation, Hinglish, vague-term variants |
+| **Perturbation operators** | `bench/operators.py` | 25 Nov 2026 | 11 violating + 3 ambiguity operators, applicability guards |
+| Splits | `bench/splits.py` | 25 Nov 2026 | Held-out operators and categories, leakage check |
+| Baselines | `bench/baselines/` | 25 Nov 2026 | B0 numeric, B1 keyword, B2 similarity, B3 one-prompt LLM |
+| **Eval harness** | `bench/run_eval.py` | 25 Nov 2026 | All section 8 metrics, confusion matrices, calibration plot, reports |
+| Annotation | `bench/annotate/` | 25 Nov 2026 | Sampling sheet, Fleiss' kappa, majority gold |
+| M5 tests | `backend/tests/test_operators.py` | 25 Nov 2026 | Operators, splits, metrics, kappa, anti-circularity guard |
 | M2 tests | `backend/tests/test_mandate_builder.py`, `test_catalogue.py`, `test_llm_client.py` | 25 Nov 2026 | 20-instruction parse set, catalogue/taxonomy, cache behaviour |
 
 ## Not yet built
 
-Benchmark harness and baselines, dispute and evidence modules, web console. Stub files carry a `TODO(Mn)` marker.
+Dispute and evidence modules, web console. Stub files carry a `TODO(Mn)` marker.
 
 ## Third-party components
 

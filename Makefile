@@ -49,8 +49,16 @@ fmt: ## ruff format + fix
 typecheck: ## mypy (light)
 	cd $(BACKEND) && ../.venv/bin/mypy app
 
-bench: ## Generate the benchmark, run every system, write bench/reports/ [M5]
-	@echo "bench/run_eval.py lands in M5"; exit 1
+BENCH_ENV := PYTHONPATH=$(CURDIR)/backend:$(CURDIR)
+BENCH_N   ?= 500
+
+bench: ## Generate MCB-IN, run every system, write bench/reports/
+	$(BENCH_ENV) $(PY) -m bench.generate --instructions $(BENCH_N) --out data/bench/cases.jsonl
+	$(BENCH_ENV) $(PY) -m bench.run_eval --cases data/bench/cases.jsonl
+	$(BENCH_ENV) $(PY) -m bench.annotate.sample --cases data/bench/cases.jsonl
+
+kappa: ## Fleiss' kappa over the filled annotation sheet
+	$(BENCH_ENV) $(PY) -m bench.annotate.agreement
 
 demo: ## Seed data and run the section 9 demo in replay mode [M6]
 	@echo "make demo lands in M6"; exit 1

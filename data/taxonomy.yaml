@@ -149,3 +149,33 @@ near_misses:
       - Footwear > Sports > Running
       - Footwear > Sports > Training
       - Footwear > Formal > Oxfords
+  oil:
+    primary: Grocery > Edible Oils > Sunflower Oil
+    also: [Grocery > Edible Oils > Mustard Oil]
+  tel:
+    primary: Grocery > Edible Oils > Mustard Oil
+    also: [Grocery > Edible Oils > Sunflower Oil]
+  dairy:
+    primary: Grocery > Dairy > Milk
+    also: [Grocery > Dairy > Paneer, Grocery > Dairy > Ghee]
+  snacks:
+    primary: Grocery > Snacks > Namkeen
+    also: [Grocery > Snacks > Biscuits]
+  staples:
+    primary: Grocery > Staples > Rice
+    also: [Grocery > Staples > Atta & Flours, Grocery > Staples > Sugar & Salt]
+  grains:
+    primary: Grocery > Staples > Rice
+    also: [Grocery > Staples > Atta & Flours]
+  bottoms:
+    primary: Apparel > Men > Track Pants
+    also: [Apparel > Women > Kurtas]
+  gym equipment:
+    primary: Fitness > Cardio Equipment > Treadmills
+    also: [Fitness > Cardio Equipment > Exercise Bikes, Fitness > Accessories > Yoga Mats]
+  cardio machine:
+    primary: Fitness > Cardio Equipment > Treadmills
+    also: [Fitness > Cardio Equipment > Exercise Bikes]
+  hair care:
+    primary: Personal Care > Hair Care > Shampoo
+    also: [Personal Care > Skin Care > Moisturiser]

@@ -359,3 +359,26 @@ def test_a_cart_survives_a_round_trip_through_json() -> None:
 
     assert dumped["items"][0]["line_total_paise"] == 899_800
     assert Cart.model_validate(dumped) == cart
+
+
+def test_a_precise_term_that_gets_a_sibling_category_is_a_breach() -> None:
+    """Training shoes for "running shoes" is wrong, not merely debatable.
+
+    Found by the benchmark: this case used to come back AMBIGUOUS, which quietly lost a
+    third of the wrong_category_near violations.
+    """
+    constraint = Constraint(type=ConstraintType.CATEGORY, operator=Operator.EQ,
+                            value="Footwear > Sports > Running", source_span="running shoes")
+    training = shoe(sku="TR1", category_path="Footwear > Sports > Training")
+    result = _l2_category(constraint, make_cart([training]))
+
+    assert result.status is ConstraintStatus.VIOLATED
+    assert result.confidence >= 0.70, "must clear T_VIOLATE or it will not block"
+
+
+def test_a_vague_term_that_gets_a_sibling_category_is_still_unclear() -> None:
+    """The same cart, asked for vaguely, stays a question for the user."""
+    constraint = Constraint(type=ConstraintType.CATEGORY, operator=Operator.EQ,
+                            value="Footwear > Sports > Running", source_span="sports shoes")
+    training = shoe(sku="TR1", category_path="Footwear > Sports > Training")
+    assert _l2_category(constraint, make_cart([training])).status is ConstraintStatus.UNCLEAR

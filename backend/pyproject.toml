@@ -45,7 +45,7 @@ include = ["app*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-pythonpath = ["."]
+pythonpath = [".", ".."]  # "..": the bench harness lives at the repo root
 filterwarnings = ["ignore::DeprecationWarning"]
 
 [tool.ruff]

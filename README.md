@@ -29,7 +29,7 @@ Full spec: [`docs/spec.pdf`](docs/spec.pdf). Working rules for contributors: [`C
 | **M2** | Catalogue, taxonomy, Mandate Builder, LLM record/replay | **done** |
 | **M3** | Conformance engine L1–L3 + aggregator + 30 golden cases | **done** |
 | **M4** | Shopping agent, 11 fault modes, step-up flow | **done** |
-| M5 | Benchmark (MCB-IN) and baselines | not started |
+| **M5** | MCB-IN benchmark, baselines B0–B3, eval harness | **done** |
 | M6 | Web console, disputes, evidence PDF, demo | not started |
 
 Modules for later milestones exist as stub files carrying a `TODO(Mn)` marker. Their
@@ -198,7 +198,32 @@ We have no real agent-dispute outcomes, so we make no claim about dispute win ra
 Production calibration needs a partner's transaction and dispute data. The liability
 allocation in `data/reason_codes.yaml` is a proposal — current card-scheme rules govern.
 
-## Metrics
+## Results
 
 Benchmark numbers are never written here by hand. `bench/run_eval.py` writes
-`bench/reports/` and nothing else does (CLAUDE.md rule 8).
+`bench/reports/` and nothing else does (CLAUDE.md rule 8). Run `make bench` to reproduce;
+the generator is seeded, so the same cases come out on every machine.
+
+The table below is copied from `bench/reports/results.md` — **test split**, whose
+perturbation operators and product categories were held out entirely and never used to
+tune anything.
+
+| System | Viol. recall | False-block | Step-up | Macro-F1 | Injection ASR | ECE |
+|---|---|---|---|---|---|---|
+| B0 numeric | 54.5% | 4.3% | — | 36.5% | 0.0% | 32.7% |
+| B1 keyword | 91.6% | 28.7% | — | 50.0% | 0.0% | 8.8% |
+| B2 similarity | 98.2% | 73.4% | — | 42.5% | 0.0% | 8.6% |
+| **ANUMATI** | **99.4%** | **4.3%** | 6.8% | **97.9%** | 0.0% | **4.2%** |
+
+B3 (one-prompt LLM) needs a reachable model and is omitted rather than estimated; see the
+note in the report. The dataset is 1,902 cases over 505 instructions, 32.5% Hinglish.
+
+Read the shape of it, not just the headline. B0 is what AP2-style checks do today: it
+almost never blocks a good cart, and it misses nearly half the violations, because it
+cannot see what was bought. B1 and B2 catch violations by being suspicious of everything
+— B2 blocks three-quarters of perfectly good carts, which no payment flow would tolerate.
+ANUMATI is the only system that gets both, and the only one that can say "I am not sure"
+instead of guessing: it asks the user on 6.8% of carts.
+
+ANUMATI reached its LLM judge for 1.7% of constraints. The rest were settled by
+deterministic rules and structured-field matching.
