@@ -1,0 +1,17 @@
+# Category taxonomy used by L2 attribute grounding (M2).
+#
+# Instruction terms map onto paths here: "running shoes" -> Footwear > Sports > Running.
+# Built in M2 from the catalogue's own category fields plus hand-written synonyms,
+# including Hinglish ones.
+
+version: 0
+paths: []
+synonyms: {}
+# Example of the intended shape:
+# paths:
+#   - Footwear > Sports > Running
+#   - Grocery > Staples > Atta & Flours
+# synonyms:
+#   "running shoes": Footwear > Sports > Running
+#   "daudne wale shoes": Footwear > Sports > Running
+#   "atta": Grocery > Staples > Atta & Flours

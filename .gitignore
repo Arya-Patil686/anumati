@@ -1,0 +1,23 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+*.db
+*.sqlite3
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+node_modules/
+dist/
+.DS_Store
+
+# Data: raw downloads and generated artefacts are not committed
+data/raw/
+data/catalogue/*.parquet
+bench/reports/*
+!bench/reports/.gitkeep
+
+# Keys: never commit private keys
+keys/
+*.pem

@@ -1,0 +1,30 @@
+Metadata-Version: 2.4
+Name: anumati
+Version: 0.1.0
+Summary: A conformance and dispute-evidence engine for AI-agent payments
+Requires-Python: >=3.11
+Requires-Dist: fastapi<0.120,>=0.115
+Requires-Dist: uvicorn[standard]<0.40,>=0.32
+Requires-Dist: pydantic<3,>=2.9
+Requires-Dist: pydantic-settings<3,>=2.6
+Requires-Dist: sqlmodel<0.1,>=0.0.22
+Requires-Dist: cryptography<47,>=43
+Requires-Dist: python-dotenv<2,>=1.0
+Requires-Dist: pyyaml<7,>=6
+Provides-Extra: engine
+Requires-Dist: joserfc<2,>=1.0; extra == "engine"
+Requires-Dist: sentence-transformers<6,>=3.0; extra == "engine"
+Requires-Dist: httpx<1,>=0.27; extra == "engine"
+Provides-Extra: bench
+Requires-Dist: pandas<3,>=2.2; extra == "bench"
+Requires-Dist: pyarrow<23,>=17; extra == "bench"
+Requires-Dist: numpy<3,>=1.26; extra == "bench"
+Requires-Dist: scikit-learn<2,>=1.5; extra == "bench"
+Requires-Dist: matplotlib<4,>=3.9; extra == "bench"
+Provides-Extra: pdf
+Requires-Dist: reportlab<5,>=4.2; extra == "pdf"
+Provides-Extra: dev
+Requires-Dist: pytest<9,>=8.3; extra == "dev"
+Requires-Dist: httpx<1,>=0.27; extra == "dev"
+Requires-Dist: ruff<0.20,>=0.7; extra == "dev"
+Requires-Dist: mypy<2,>=1.13; extra == "dev"

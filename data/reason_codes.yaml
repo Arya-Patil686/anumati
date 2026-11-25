@@ -1,0 +1,55 @@
+# Dispute reason codes used by the evidence module (spec section 4 / 11.4).
+#
+# Verify these code names against the current Visa and Mastercard dispute guides before
+# the final pitch. There is no agent-specific reason code today — that gap is the point.
+
+visa:
+  "10.4": Other Fraud - Card-Absent Environment
+  "13.1": Merchandise/Services Not Received
+  "13.2": Cancelled Recurring Transaction
+  "13.3": Not as Described or Defective Merchandise/Services
+
+mastercard:
+  "4837": No Cardholder Authorization
+  "4841": Cancelled Recurring or Digital Goods Transactions
+  "4853": Cardholder Dispute - Not as Described / Defective
+  "4855": Goods or Services Not Provided
+
+# allocation is ANUMATI's *proposal*. Card-scheme rules still decide who pays.
+scenarios:
+  conformed_user_regret:
+    allocation: user
+    visa: "13.3"
+    mc: "4853"
+    evidence: CONFORMS verdict plus the signed mandate
+  agent_exceeded_mandate:
+    allocation: agent_operator
+    visa: "13.3"
+    mc: "4853"
+    evidence: VIOLATES verdict, or no check on record
+  agent_recurrence_error:
+    allocation: agent_operator
+    visa: "13.2"
+    mc: "4841"
+    evidence: VIOLATES on the recurrence constraint
+  not_delivered:
+    allocation: merchant
+    visa: "13.1"
+    mc: "4855"
+    evidence: outside conformance - this is a fulfilment failure
+  mandate_forged:
+    allocation: issuer_fraud
+    visa: "10.4"
+    mc: "4837"
+    evidence: signature or chain check fails
+  user_approved_stepup:
+    allocation: user
+    visa: "13.3"
+    mc: "4853"
+    evidence: logged step-up confirmation
+
+# UPI: agent-payment dispute categories are not published yet. Map to the bank's existing
+# UPI complaint flow and update once NPCI publishes UAP rules.
+upi:
+  status: not_published
+  fallback: existing UPI complaint categories

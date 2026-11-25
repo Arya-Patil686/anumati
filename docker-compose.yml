@@ -1,0 +1,28 @@
+services:
+  api:
+    build:
+      context: ./backend
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: sqlite:////data/anumati.db
+      # Replay by default: the demo must run with no network (CLAUDE.md rule 2).
+      LLM_MODE: ${LLM_MODE:-replay}
+      LEDGER_SIGNING_KEY_HEX: ${LEDGER_SIGNING_KEY_HEX:-}
+    volumes:
+      - ./data:/data
+      - ./backend:/srv
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request;urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  # web:            # [M6] Vite + React console
+  #   build:
+  #     context: ./web
+  #   ports:
+  #     - "5173:5173"
+  #   depends_on:
+  #     api:
+  #       condition: service_healthy

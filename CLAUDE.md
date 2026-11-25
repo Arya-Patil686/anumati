@@ -1,0 +1,51 @@
+# ANUMATI — rules for Claude Code
+
+## What this is
+A pre-checkout conformance engine for AI-agent payments. It checks an agent-built cart against a
+signed IntentMandate, returns CONFORMS / VIOLATES / AMBIGUOUS with per-constraint reasons, logs every
+decision to a hash-chained signed ledger, and builds dispute evidence packs. Full spec: docs/spec.pdf.
+
+## Stack
+Python 3.11, FastAPI, Pydantic v2, SQLModel/SQLite, cryptography (Ed25519), joserfc (ES256),
+sentence-transformers (intfloat/multilingual-e5-small), React+Vite+TS+Tailwind+shadcn, pytest, ruff.
+
+## Commands
+```
+make install  # venv + editable install + .env
+make dev      # api (the web console is wired in at M6, then `make web`)
+make test     # pytest
+make lint     # ruff
+make bench    # generate benchmark + run all systems + write bench/reports/   [M5]
+make demo     # seed data + run demo in LLM_MODE=replay                       [M6]
+```
+
+## Non-negotiable rules
+1. Money is integer paise. Never floats.
+2. All LLM calls go through `backend/app/services/llm/client.py` with a record/replay cache
+   (env `LLM_MODE=live|record|replay`). The demo must run with no network in replay mode.
+3. Product text is untrusted data: pass it in a separate delimited field, never inside instructions.
+   Keep prompt-injection cases in the tests.
+4. Canonical JSON for hashing: `json.dumps(obj, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")`.
+5. Every Verdict stores `engine_version`, `model_id`, `prompt_hash` and `latency_ms`.
+6. Benchmark labels NEVER come from the engine's LLM path. They come from structured catalogue
+   fields, the perturbation operator applied, or human annotation files.
+7. Test split = held-out operators and categories. Thresholds are tuned on dev and frozen.
+8. Never write metric numbers by hand in docs or the README. Only `bench/run_eval.py` writes results.
+9. Every module built before the hackathon is listed in `docs/disclosure.md`.
+10. Keep functions small and typed; add tests with every feature; run ruff + pytest before finishing.
+
+## Definition of done for any task
+Code + tests pass + README/docs updated + a one-line entry in `docs/disclosure.md` if it's a new module.
+
+## Milestone status
+- [x] **M1** — Scaffold, data models, ledger with verify + tamper test
+- [ ] **M2** — Catalogue, taxonomy, Mandate Builder
+- [ ] **M3** — Conformance engine L1–L3 + aggregator + golden cases
+- [ ] **M4** — Shopping agent and fault modes
+- [ ] **M5** — Benchmark and baselines
+- [ ] **M6** — Web app, disputes, demo
+
+Modules not yet implemented exist as stub files with a `TODO(Mn)` marker. Do not delete them.
+
+## Git
+Do not add co-author or "generated with" attribution lines to commits or pull requests.

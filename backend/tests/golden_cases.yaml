@@ -1,0 +1,23 @@
+# 30 hand-written golden cases for the conformance engine (M3):
+# 10 CONFORMS, 10 VIOLATES, 10 AMBIGUOUS, including 3 prompt-injection cases.
+#
+# Labels here are written by hand from the structured fields. They never come from
+# the engine's own LLM path (CLAUDE.md rule 6).
+#
+# Shape of each case:
+#   - id: gc_001
+#     instruction: "white running shoes, under 5000, delivered by Friday"
+#     language: en
+#     cart:
+#       items:
+#         - sku: ...
+#           title: ...
+#           attributes: {colour: white, ...}
+#           unit_price_paise: 449900
+#           qty: 1
+#       shipping_paise: 0
+#       tax_paise: 0
+#     expected_decision: CONFORMS
+#     expected_violated_constraint_types: []
+#     notes: why this is the right answer
+cases: []
