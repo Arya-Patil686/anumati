@@ -14,3 +14,10 @@ Everything is regenerated from source, so a changed number never has to be retyp
 Every figure on the Feasibility slide is copied from `bench/reports/results.csv`, which
 only `bench/run_eval.py` writes. Re-run `make bench` at the repo root and the numbers
 here should be updated from it rather than edited by hand.
+
+## The links on the deck
+
+The cover and the team slide both carry <https://arya-patil686.github.io/anumati/> — the
+hosted console. It is a recorded demo: a static host has no API behind it, so the site
+replays a session `make demo-fixtures` captured from the real engine. Re-run that, then
+rebuild this deck, if the engine's answers change.

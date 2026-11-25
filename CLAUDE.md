@@ -68,4 +68,9 @@ serves the API and the console together.
   makes the CSS build throw `Cannot convert undefined or null to object`.
 
 ## Git
+- The hosted console at <https://arya-patil686.github.io/anumati/> is a **recording**, not
+  a deployment: `make demo-fixtures` captures real responses into `web/public/demo/`, and
+  CI only builds what is committed there. Change what the engine answers and that
+  recording goes stale — re-record it in the same change, or the site starts lying.
+
 Do not add co-author or "generated with" attribution lines to commits or pull requests.

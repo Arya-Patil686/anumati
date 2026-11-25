@@ -27,6 +27,7 @@ AMBER = RGBColor(0xFF, 0xC5, 0x3D)
 SLIDE_W = Inches(13.333)
 
 REPO = "github.com/Arya-Patil686/anumati"
+LIVE = "arya-patil686.github.io/anumati"
 
 
 def find_type_here(slide):
@@ -133,11 +134,21 @@ def main() -> None:
         ],
         left=0.72, top=4.78, width=9.0, height=1.3,
     )
-    textbox(
-        cover,
-        [("Code:  " + REPO, 11, MUTE, False)],
-        left=0.72, top=5.92, width=9.0, height=0.4,
-    )
+    live = cover.shapes.add_textbox(Inches(0.72), Inches(5.88), Inches(10.0), Inches(0.5))
+    live.text_frame.word_wrap = True
+    para = live.text_frame.paragraphs[0]
+    for text, colour, bold in [
+        ("Live  ", LIME, True),
+        (LIVE, CHALK, False),
+        ("      Code  ", LIME, True),
+        (REPO, MUTE, False),
+    ]:
+        run = para.add_run()
+        run.text = text
+        run.font.size = Pt(11)
+        run.font.bold = bold
+        run.font.color.rgb = colour
+        run.font.name = "Calibri"
 
     # ---------------------------------------------------------------- 2 problem
     write_body(
@@ -266,25 +277,35 @@ def main() -> None:
 
     # The table runs to about 5.45"; the footer logos start at about 6.4". One compact
     # line fits between them.
-    box = team.shapes.add_textbox(Inches(0.62), Inches(5.56), Inches(12.1), Inches(0.62))
+    box = team.shapes.add_textbox(Inches(0.62), Inches(5.48), Inches(12.1), Inches(0.80))
     tf = box.text_frame
     tf.word_wrap = True
-    para = tf.paragraphs[0]
-    for text, size, colour, bold in [
-        ("Repository  ", 12, LIME, True),
-        (REPO, 12, CHALK, False),
-        ("      Run it  ", 12, LIME, True),
-        ("docker compose up", 12, CHALK, False),
-        ("  → console :5173, API :8000", 12, MUTE, False),
-        ("      Offline demo  ", 12, LIME, True),
-        ("make demo", 12, CHALK, False),
-    ]:
-        run = para.add_run()
-        run.text = text
-        run.font.size = Pt(size)
-        run.font.bold = bold
-        run.font.color.rgb = colour
-        run.font.name = "Calibri"
+    lines = [
+        [
+            ("Live console  ", 12, LIME, True),
+            (LIVE, 12, CHALK, False),
+            ("   — all five screens, replaying a recorded session of the real engine", 12, MUTE, False),
+        ],
+        [
+            ("Repository  ", 12, LIME, True),
+            (REPO, 12, CHALK, False),
+            ("      Run it for real  ", 12, LIME, True),
+            ("docker compose up", 12, CHALK, False),
+            ("  → :5173 / :8000", 12, MUTE, False),
+            ("      Offline  ", 12, LIME, True),
+            ("make demo", 12, CHALK, False),
+        ],
+    ]
+    for i, runs in enumerate(lines):
+        para = tf.paragraphs[0] if i == 0 else tf.add_paragraph()
+        para.space_after = Pt(2)
+        for text, size, colour, bold in runs:
+            run = para.add_run()
+            run.text = text
+            run.font.size = Pt(size)
+            run.font.bold = bold
+            run.font.color.rgb = colour
+            run.font.name = "Calibri"
 
     prs.save(str(OUT))
     print("wrote", OUT)
