@@ -20,12 +20,19 @@ Keep it current from day one — add a line in the same change that adds a modul
 | API app | `backend/app/main.py` | 25 Nov 2026 | FastAPI app, CORS, `/health` |
 | Ledger tests | `backend/tests/test_ledger.py` | 25 Nov 2026 | Chain, signing and tamper-detection tests |
 | Packaging | `Makefile`, `docker-compose.yml`, `backend/Dockerfile` | 25 Nov 2026 | One-command run |
+| Category taxonomy | `data/taxonomy.yaml`, `backend/app/services/engine/taxonomy.py` | 25 Nov 2026 | Controlled vocabulary, English/Hinglish synonyms, near-miss terms |
+| Catalogue | `backend/app/services/catalogue.py` | 25 Nov 2026 | Section 7 schema, CSV normalisation, parquet, lookup and search |
+| Synthetic catalogue | `backend/app/services/catalogue_synth.py` | 25 Nov 2026 | Seeded ~2,000-SKU fallback and the stable `DEMO-*` SKUs |
+| **Mandate Builder** | `backend/app/services/mandate_builder.py` | 25 Nov 2026 | Instruction → IntentMandate (14 constraint types, hard/soft, source spans), read-back, ES256 JWS signing |
+| Mandate API | `backend/app/api/routes_mandates.py` | 25 Nov 2026 | `POST /mandates`, `POST /mandates/{id}/sign`, `GET /mandates/{id}` |
+| LLM client + cache | `backend/app/services/llm/` | 25 Nov 2026 | Provider-agnostic JSON client, record/replay cache, injection guard |
+| M2 tests | `backend/tests/test_mandate_builder.py`, `test_catalogue.py`, `test_llm_client.py` | 25 Nov 2026 | 20-instruction parse set, catalogue/taxonomy, cache behaviour |
 
 ## Not yet built
 
-Mandate Builder, catalogue and taxonomy, conformance engine (L1–L3 and aggregator),
-shopping agent and fault modes, LLM client and record/replay cache, benchmark harness and
-baselines, dispute and evidence modules, web console. Stub files carry a `TODO(Mn)` marker.
+Conformance engine (L1–L3 and aggregator), shopping agent and fault modes, benchmark
+harness and baselines, dispute and evidence modules, web console. Stub files carry a
+`TODO(Mn)` marker.
 
 ## Third-party components
 

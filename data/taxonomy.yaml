@@ -1,17 +1,151 @@
-# Category taxonomy used by L2 attribute grounding (M2).
+# Category taxonomy used by the Mandate Builder (M2) and L2 attribute grounding (M3).
 #
-# Instruction terms map onto paths here: "running shoes" -> Footwear > Sports > Running.
-# Built in M2 from the catalogue's own category fields plus hand-written synonyms,
-# including Hinglish ones.
+# `paths` is the controlled vocabulary. `synonyms` maps the words people actually type
+# onto a path — including Hinglish, which is roughly a quarter of the benchmark
+# instruction set. Matching is case-insensitive and ignores surrounding punctuation.
+#
+# Keep synonyms unambiguous: one term maps to exactly one path. Terms that genuinely
+# straddle two categories (e.g. "trainers") belong in `near_misses`, which L2 treats as
+# a signal to check attributes rather than as a decided category.
 
-version: 0
-paths: []
-synonyms: {}
-# Example of the intended shape:
-# paths:
-#   - Footwear > Sports > Running
-#   - Grocery > Staples > Atta & Flours
-# synonyms:
-#   "running shoes": Footwear > Sports > Running
-#   "daudne wale shoes": Footwear > Sports > Running
-#   "atta": Grocery > Staples > Atta & Flours
+version: 1
+
+paths:
+  # --- Footwear ---
+  - Footwear > Sports > Running
+  - Footwear > Sports > Training
+  - Footwear > Sports > Walking
+  - Footwear > Casual > Sneakers
+  - Footwear > Casual > Sandals
+  - Footwear > Formal > Oxfords
+  # --- Fitness equipment (the "treadmill for running shoes" trap) ---
+  - Fitness > Cardio Equipment > Treadmills
+  - Fitness > Cardio Equipment > Exercise Bikes
+  - Fitness > Accessories > Yoga Mats
+  # --- Apparel ---
+  - Apparel > Men > T-Shirts
+  - Apparel > Men > Track Pants
+  - Apparel > Women > Kurtas
+  # --- Grocery ---
+  - Grocery > Staples > Atta & Flours
+  - Grocery > Staples > Rice
+  - Grocery > Staples > Sugar & Salt
+  - Grocery > Pulses > Dal
+  - Grocery > Edible Oils > Mustard Oil
+  - Grocery > Edible Oils > Sunflower Oil
+  - Grocery > Dairy > Milk
+  - Grocery > Dairy > Paneer
+  - Grocery > Dairy > Ghee
+  - Grocery > Beverages > Tea
+  - Grocery > Beverages > Coffee
+  - Grocery > Snacks > Namkeen
+  - Grocery > Snacks > Biscuits
+  - Grocery > Meat & Seafood > Chicken
+  - Grocery > Fruits & Vegetables > Fresh Vegetables
+  # --- Personal care ---
+  - Personal Care > Hair Care > Shampoo
+  - Personal Care > Oral Care > Toothpaste
+  - Personal Care > Skin Care > Moisturiser
+
+synonyms:
+  # Footwear — English
+  running shoes: Footwear > Sports > Running
+  running shoe: Footwear > Sports > Running
+  jogging shoes: Footwear > Sports > Running
+  runners: Footwear > Sports > Running
+  training shoes: Footwear > Sports > Training
+  gym shoes: Footwear > Sports > Training
+  walking shoes: Footwear > Sports > Walking
+  sneakers: Footwear > Casual > Sneakers
+  casual shoes: Footwear > Casual > Sneakers
+  sandals: Footwear > Casual > Sandals
+  floaters: Footwear > Casual > Sandals
+  formal shoes: Footwear > Formal > Oxfords
+  oxfords: Footwear > Formal > Oxfords
+  # Footwear — Hinglish
+  daudne wale shoes: Footwear > Sports > Running
+  daudne ke shoes: Footwear > Sports > Running
+  running wale shoes: Footwear > Sports > Running
+  chappal: Footwear > Casual > Sandals
+  joota: Footwear > Casual > Sneakers
+  jute: Footwear > Casual > Sneakers
+
+  # Fitness
+  treadmill: Fitness > Cardio Equipment > Treadmills
+  running machine: Fitness > Cardio Equipment > Treadmills
+  exercise bike: Fitness > Cardio Equipment > Exercise Bikes
+  cycle machine: Fitness > Cardio Equipment > Exercise Bikes
+  yoga mat: Fitness > Accessories > Yoga Mats
+
+  # Apparel
+  t-shirt: Apparel > Men > T-Shirts
+  tshirt: Apparel > Men > T-Shirts
+  tee: Apparel > Men > T-Shirts
+  track pants: Apparel > Men > Track Pants
+  lower: Apparel > Men > Track Pants
+  kurta: Apparel > Women > Kurtas
+
+  # Grocery — English
+  atta: Grocery > Staples > Atta & Flours
+  wheat flour: Grocery > Staples > Atta & Flours
+  flour: Grocery > Staples > Atta & Flours
+  rice: Grocery > Staples > Rice
+  basmati: Grocery > Staples > Rice
+  sugar: Grocery > Staples > Sugar & Salt
+  salt: Grocery > Staples > Sugar & Salt
+  dal: Grocery > Pulses > Dal
+  lentils: Grocery > Pulses > Dal
+  toor dal: Grocery > Pulses > Dal
+  mustard oil: Grocery > Edible Oils > Mustard Oil
+  sunflower oil: Grocery > Edible Oils > Sunflower Oil
+  cooking oil: Grocery > Edible Oils > Sunflower Oil
+  milk: Grocery > Dairy > Milk
+  paneer: Grocery > Dairy > Paneer
+  ghee: Grocery > Dairy > Ghee
+  tea: Grocery > Beverages > Tea
+  tea powder: Grocery > Beverages > Tea
+  coffee: Grocery > Beverages > Coffee
+  namkeen: Grocery > Snacks > Namkeen
+  biscuits: Grocery > Snacks > Biscuits
+  chicken: Grocery > Meat & Seafood > Chicken
+  vegetables: Grocery > Fruits & Vegetables > Fresh Vegetables
+  # Grocery — Hinglish
+  chakki atta: Grocery > Staples > Atta & Flours
+  gehu ka atta: Grocery > Staples > Atta & Flours
+  chawal: Grocery > Staples > Rice
+  cheeni: Grocery > Staples > Sugar & Salt
+  namak: Grocery > Staples > Sugar & Salt
+  arhar dal: Grocery > Pulses > Dal
+  sarson ka tel: Grocery > Edible Oils > Mustard Oil
+  doodh: Grocery > Dairy > Milk
+  chai: Grocery > Beverages > Tea
+  chai patti: Grocery > Beverages > Tea
+  sabzi: Grocery > Fruits & Vegetables > Fresh Vegetables
+  murga: Grocery > Meat & Seafood > Chicken
+
+  # Personal care
+  shampoo: Personal Care > Hair Care > Shampoo
+  toothpaste: Personal Care > Oral Care > Toothpaste
+  manjan: Personal Care > Oral Care > Toothpaste
+  moisturiser: Personal Care > Skin Care > Moisturiser
+  moisturizer: Personal Care > Skin Care > Moisturiser
+
+# Terms that sit between categories on purpose. The Mandate Builder records the primary
+# path but flags the constraint so L2 must confirm it from attributes rather than
+# treating the category as settled. These are what produce genuine AMBIGUOUS verdicts.
+near_misses:
+  trainers:
+    primary: Footwear > Sports > Training
+    also: [Footwear > Sports > Running, Footwear > Casual > Sneakers]
+  sports shoes:
+    primary: Footwear > Sports > Running
+    also: [Footwear > Sports > Training, Footwear > Sports > Walking]
+  trail shoes:
+    primary: Footwear > Sports > Running
+    also: [Footwear > Sports > Walking]
+  shoes:
+    primary: Footwear > Casual > Sneakers
+    also:
+      - Footwear > Sports > Running
+      - Footwear > Sports > Training
+      - Footwear > Formal > Oxfords

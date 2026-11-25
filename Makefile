@@ -26,6 +26,12 @@ web: ## Start the Vite dev server [M6]
 	@test -f web/package.json || { echo "web/ is scaffolded in M6"; exit 0; }
 	cd web && npm run dev
 
+catalogue: ## Build data/catalogue/catalogue.parquet (CSV from .env, else synthetic)
+	cd $(BACKEND) && ../$(PY) -m app.services.catalogue ingest
+
+catalogue-synth: ## Force the deterministic synthetic catalogue
+	cd $(BACKEND) && ../$(PY) -m app.services.catalogue ingest --synthetic
+
 test: ## Run pytest
 	cd $(BACKEND) && ../$(PY) -m pytest -q
 

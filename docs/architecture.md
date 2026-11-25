@@ -43,8 +43,8 @@ platform or the issuer.
 
 | | Component | Responsibility | Milestone |
 |---|---|---|---|
-| A | Mandate Builder | Instruction → typed `IntentMandate`, plain-language read-back, ES256 JWS signing | M2 |
-| B | Catalogue Service | Normalised catalogue, search, lookup, category taxonomy | M2 |
+| A | **Mandate Builder** | **Instruction → typed `IntentMandate`, read-back, ES256 JWS signing** | **M2 ✓** |
+| B | **Catalogue Service** | **Normalised catalogue, search, lookup, category taxonomy** | **M2 ✓** |
 | C | Shopping Agent | Tool-calling loop; fault modes inject realistic mistakes | M4 |
 | D | Conformance Engine | L1 rules → L2 attributes → L3 judge → aggregator | M3 |
 | E | **Decision Ledger** | **Append-only, hash-chained, Ed25519-signed, verify endpoint** | **M1 ✓** |
@@ -79,6 +79,35 @@ does **not** defend against someone who holds the key, and it does not prove *wh
 entry was written — there is no external anchor. For a production deployment the chain
 head would be periodically anchored somewhere the service does not control. Worth saying
 out loud if a judge asks.
+
+## Mandate Builder (built)
+
+Rule-based, not model-based. The read-back is what the user signs, so every constraint
+carries the `source_span` it was read from, and the parse has to be reproducible —
+a mandate that drifts between runs would make the ledger worthless as evidence. Putting a
+model here as well as in the L3 judge would also make the benchmark circular (rule 6).
+
+Extractors run over the instruction and each returns the constraints it is sure of, with
+the span it read them from. English and Hinglish share the same patterns, because real
+instructions code-mix inside one sentence. A hedged constraint ("preferably rubber") is
+soft; a spending cap never is. When the user states no budget, the builder supplies a
+default and says so in the read-back rather than authorising an uncapped agent quietly.
+
+Two signing keys, deliberately. The mandate's ES256 JWS attests *the user authorised
+this*; the ledger's Ed25519 signature attests *this service recorded that*. In production
+those are different parties, so they are different keys here too.
+
+## Catalogue and taxonomy (built)
+
+Section 7 schema, with rupee floats converted to integer paise once at ingest. A seeded
+synthetic catalogue of ~2,000 SKUs is the fallback when a Kaggle dataset's licence or
+columns do not work out — same SKUs on every machine, and the structured fields are
+constructed, so they can serve as benchmark labels without circularity.
+
+`near_misses` in `data/taxonomy.yaml` is the part that matters for verdict quality.
+"trainers" and "sports shoes" resolve to a primary path at low confidence, which is how a
+genuinely unclear instruction reaches the AMBIGUOUS band instead of a confident wrong
+answer.
 
 ## Conformance engine layers (M3)
 

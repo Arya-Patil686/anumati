@@ -11,10 +11,11 @@ sentence-transformers (intfloat/multilingual-e5-small), React+Vite+TS+Tailwind+s
 
 ## Commands
 ```
-make install  # venv + editable install + .env
-make dev      # api (the web console is wired in at M6, then `make web`)
-make test     # pytest
-make lint     # ruff
+make install    # venv + editable install + .env
+make dev        # api (the web console is wired in at M6, then `make web`)
+make test       # pytest
+make lint       # ruff
+make catalogue  # build data/catalogue/catalogue.parquet
 make bench    # generate benchmark + run all systems + write bench/reports/   [M5]
 make demo     # seed data + run demo in LLM_MODE=replay                       [M6]
 ```
@@ -39,13 +40,23 @@ Code + tests pass + README/docs updated + a one-line entry in `docs/disclosure.m
 
 ## Milestone status
 - [x] **M1** — Scaffold, data models, ledger with verify + tamper test
-- [ ] **M2** — Catalogue, taxonomy, Mandate Builder
+- [x] **M2** — Catalogue, taxonomy, Mandate Builder, LLM client with record/replay
 - [ ] **M3** — Conformance engine L1–L3 + aggregator + golden cases
 - [ ] **M4** — Shopping agent and fault modes
 - [ ] **M5** — Benchmark and baselines
 - [ ] **M6** — Web app, disputes, demo
 
 Modules not yet implemented exist as stub files with a `TODO(Mn)` marker. Do not delete them.
+
+## Decisions worth not relitigating
+- **The Mandate Builder is rule-based, not LLM-based.** The read-back is what the user
+  signs, so every constraint carries the `source_span` it came from, and parsing must give
+  the same answer twice. Model judgement belongs in the L3 judge (M3); a model on both ends
+  would make the benchmark circular.
+- **The synthetic catalogue is seeded and template-driven, not LLM-written.** Same SKUs on
+  every machine, and the structured fields are constructed, so they are usable as labels.
+- **`DEMO-*` SKUs are hand-written and stable.** The section 9 demo and the M3 golden cases
+  reference them by SKU. Do not renumber them.
 
 ## Git
 Do not add co-author or "generated with" attribution lines to commits or pull requests.

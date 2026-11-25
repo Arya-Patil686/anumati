@@ -26,7 +26,7 @@ Full spec: [`docs/spec.pdf`](docs/spec.pdf). Working rules for contributors: [`C
 | Milestone | Scope | State |
 |---|---|---|
 | **M1** | Scaffold, data models, ledger with verify + tamper test | **done** |
-| M2 | Catalogue, taxonomy, Mandate Builder | not started |
+| **M2** | Catalogue, taxonomy, Mandate Builder, LLM record/replay | **done** |
 | M3 | Conformance engine L1–L3 + aggregator + golden cases | not started |
 | M4 | Shopping agent and fault modes | not started |
 | M5 | Benchmark (MCB-IN) and baselines | not started |
@@ -39,6 +39,7 @@ tests skip at module level, so the suite stays green.
 
 ```bash
 make install
+make catalogue    # builds the product catalogue (synthetic unless a CSV is configured)
 make test
 make dev
 ```
@@ -85,9 +86,12 @@ dispute pack is worth something only if both hold.
 | `GET /ledger` | Browse entries (`limit`, `offset`) |
 | `GET /ledger/{seq}` | One entry |
 | `GET /ledger/verify` | Walk the chain → `{ok, broken_at, reason, …}` |
+| `POST /mandates` | Instruction → draft mandate + plain-language read-back |
+| `POST /mandates/{id}/sign` | ES256 JWS signature + first ledger entry |
+| `GET /mandates/{id}` | Fetch a mandate and its read-back |
 
-Endpoints for `/mandates`, `/check`, `/agent/run`, `/stepup`, `/disputes` and `/metrics`
-are wired in at their milestones.
+Endpoints for `/check`, `/agent/run`, `/stepup`, `/disputes` and `/metrics` are wired in
+at their milestones.
 
 ### Tamper demo
 
@@ -101,6 +105,55 @@ cd backend && ../.venv/bin/python -m pytest tests/test_ledger.py -q
 The suite covers an edited payload, a payload edited *and* re-hashed (caught by the
 signature, since the key is not in the database), and a deleted entry.
 
+## What M2 adds
+
+**Mandate Builder** — an instruction becomes a typed `IntentMandate`. It is **rule-based,
+not model-based**, on purpose: the read-back is what the user signs, so every constraint
+carries the `source_span` it was read from, and the same sentence must parse the same way
+every time. English and Hinglish are handled by the same patterns, because real
+instructions code-mix inside one sentence:
+
+```
+"5000 se kam ke white running shoes, Friday tak chahiye, no substitutes"
+
+  BUDGET_TOTAL  lte  500000                     span='5000 se kam'
+  ATTRIBUTE     eq   {colour: white}            span='white'
+  CATEGORY      eq   Footwear > Sports > Running  span='running shoes'
+  DELIVERY_BY   lte  2026-11-27                 span='Friday tak'
+  SUBSTITUTION  is_false  False                 span='no substitutes'
+```
+
+All 14 constraint types parse. A constraint the user hedged ("preferably rubber") is
+marked soft and will not block a purchase. A spending cap never is. When no budget is
+stated the builder supplies a default and says so in the read-back, rather than
+authorising an uncapped agent quietly.
+
+**Read-back** — second person, plain English, quoting the user's own words. This text is
+what the user agrees to, and at dispute time it is the record of what they understood.
+
+**Signing** — ES256 JWS over the mandate's canonical payload, with a key separate from the
+ledger's Ed25519 key. They attest different things: this one that *the user authorised
+this*, the ledger's that *this service recorded that*. In production they belong to
+different parties.
+
+**Catalogue** — normalises a Kaggle product CSV to the section 7 schema, with a
+deterministic synthetic fallback of ~2,000 SKUs so nothing blocks on a download. Rupee
+floats become integer paise once, at ingest, and never reappear. A handful of stable
+`DEMO-*` SKUs back the demo and the M3 golden cases: a white running shoe, an off-white
+one at ₹4,799, a treadmill, a subscription variant, a 4.9 kg atta pack, and one product
+whose description carries a prompt-injection payload.
+
+**Taxonomy** — `data/taxonomy.yaml` maps what people type onto category paths, Hinglish
+included ("daudne wale shoes", "sarson ka tel"). Terms listed under `near_misses`
+("trainers", "sports shoes") resolve with low confidence on purpose — that is how a
+genuinely unclear case reaches the AMBIGUOUS band instead of a confident wrong answer.
+
+**LLM client** — every model call goes through one client with a record/replay cache
+(`LLM_MODE=live|record|replay`). A cache miss in replay mode raises rather than reaching
+the network, because a silent network call during the demo is exactly the failure we are
+trying to avoid. Untrusted product text is passed in a delimited data block with an
+injection guard, never inside the instruction.
+
 ## Layout
 
 ```
@@ -110,8 +163,11 @@ backend/app/
   db.py                 engine and session
   models/               domain models (Pydantic) + store.py (SQLModel rows)
   services/ledger.py    append and verify; no update, no delete
-  services/engine/      L1 rules, L2 attributes, L3 judge, aggregator   [M3]
-  services/llm/         client with record/replay cache                 [M2]
+  services/mandate_builder.py   instruction -> IntentMandate, read-back, ES256 signing
+  services/catalogue.py         schema, CSV ingest, lookup and search
+  services/catalogue_synth.py   seeded synthetic catalogue + stable DEMO-* SKUs
+  services/engine/      taxonomy; L1 rules, L2 attributes, L3 judge, aggregator  [M3]
+  services/llm/         client with record/replay cache
   services/agent/       tool-calling shopping agent and fault modes     [M4]
   api/                  routers
 bench/                  MCB-IN generator, operators, baselines, eval     [M5]
@@ -119,9 +175,11 @@ data/                   catalogue, taxonomy.yaml, reason_codes.yaml
 web/                    React + Vite console                            [M6]
 ```
 
-Domain models are plain Pydantic and their database rows live in `models/store.py`, so
-each file uses one library. `LedgerEntry` is the exception and is itself a table —
-for the ledger, the stored bytes *are* the evidence.
+Two deliberate departures from the layout in spec §11.1. Domain models are plain Pydantic
+and their database rows live in `models/store.py`, so each file uses one library;
+`LedgerEntry` is the exception and is itself a table, because for the ledger the stored
+bytes *are* the evidence. And catalogue *generation* sits in `catalogue_synth.py` apart
+from catalogue *serving*, which keeps both modules to one job.
 
 ## Configuration
 

@@ -16,6 +16,7 @@ from sqlmodel import Session, SQLModel, create_engine
 
 from app import db
 from app.services.ledger import LedgerService, LedgerSigner, set_signer
+from app.services.mandate_builder import MandateBuilder, MandateSigner, set_mandate_signer
 
 
 @pytest.fixture
@@ -50,7 +51,22 @@ def ledger(session: Session, signer: LedgerSigner) -> LedgerService:
 
 
 @pytest.fixture
-def client(engine: Engine, signer: LedgerSigner) -> Iterator[TestClient]:
+def mandate_signer() -> MandateSigner:
+    """A throwaway ES256 key, so tests never touch keys/mandate_es256.pem."""
+    key = MandateSigner.generate()
+    set_mandate_signer(key)
+    return key
+
+
+@pytest.fixture
+def builder() -> MandateBuilder:
+    return MandateBuilder()
+
+
+@pytest.fixture
+def client(
+    engine: Engine, signer: LedgerSigner, mandate_signer: MandateSigner
+) -> Iterator[TestClient]:
     from app.main import app
 
     with TestClient(app) as c:
